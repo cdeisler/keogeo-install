@@ -1,6 +1,9 @@
 #!/bin/bash
+
+cd /home/kiosk
+
 sudo apt install -y openssh-server
-sudo systemctl status ssh
+#sudo systemctl status ssh
 sudo ufw allow ssh
 
 # Function to check if a package is installed and up-to-date
