@@ -1,4 +1,7 @@
 #!/bin/bash
+sudo apt install -y openssh-server
+sudo systemctl status ssh
+sudo ufw allow ssh
 
 # Function to check if a package is installed and up-to-date
 check_package() {
