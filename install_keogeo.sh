@@ -2,9 +2,31 @@
 
 cd /home/kiosk
 
+sudo sed -i "s/\$nrconf{restart} = 'i';/\$nrconf{restart} = 'a';/g" /etc/needrestart/needrestart.conf
+
 sudo apt install -y openssh-server
 #sudo systemctl status ssh
 sudo ufw allow ssh
+
+echo "--------- start removing snapd"
+set -e
+
+# Remove all installed snaps
+for snap_name in $(snap list | awk 'NR>1 {print $1}'); do
+    sudo snap remove "$snap_name"
+done
+
+# Remove snapd
+sudo apt-get purge -y snapd
+
+# Remove orphaned directories
+sudo rm -rf /var/cache/snapd/
+sudo rm -rf /var/snap/
+sudo rm -rf /var/lib/snapd/
+sudo rm -rf /snap/
+
+echo "--------- Snapd has been removed completely."
+
 
 # Function to check if a package is installed and up-to-date
 check_package() {
@@ -127,6 +149,8 @@ cd libretro-super
 ./libretro-build.sh fbneo
 
 #sudo ./retroarch -L /home/kiosk/libretro-super/dist/unix/fbneo_libretro.so /home/kiosk/roms/arcade/kof96.zip
+#sudo ./retroarch/retroarch -L /home/kiosk/libretro-super/dist/unix/fbneo_libretro.so /home/kiosk/keogeo/roms/fbneo/kof98.zip
+#sudo ./retroarch/retroarch -L /home/kiosk/libretro-super/dist/unix/fbneo_libretro.so /home/kiosk/keogeo/roms/fbneo/kof98.zip
 
 
 #sudo apt-get install -y python3-pyqt5
