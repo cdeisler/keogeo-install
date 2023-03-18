@@ -1,7 +1,7 @@
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
-from PyQt5.QtCore import QProcess, QTextStream, Qt, QObject, pyqtSignal
+from PyQt5.QtCore import QObject, pyqtSignal
 import sys
 import time
 import threading
@@ -15,48 +15,33 @@ def main():
     print('Step 2')
     print('     Launch QT app to run in background')
     myapp = myImageDisplayApp()
+    myapp.emit_image_update('/home/kiosk/keogeo/1943.png')
+    time.sleep(20)
+    # print('Step 3')
+    # print('     Continue some logic while QT running in background')
+    # time.sleep(2)
+        
+    # all_screens = QApplication.instance().screens()
+    # for s in all_screens:
 
-    print('Step 3')
-    print('     Continue some logic while QT running in background')
-    process = QProcess()
-    process.setProcessChannelMode(QProcess.MergedChannels)
-
-    process.start("sudo", ["./home/kiosk/retroarch/retroarch", "-L", "-f", "/home/kiosk/libretro-super/dist/unix/fbneo_libretro.so", "/home/kiosk/keogeo/roms/fbneo/kof98.zip"])
-    time.sleep(12)
-
+        # print()
+        # print(s.name())
+        # print(s.availableGeometry())
+        # print(s.availableGeometry().width())
+        # print(s.availableGeometry().height())
+        # print(s.size())
+        # print(s.size().width())
+        # print(s.size().height())
+        
     # print('Step 4')
     # print('     Update the displayed image in the QT app running in background')
-    # myapp.emit_image_update('/home/kiosk/keogeo/1943.png')
+    # myapp.emit_image_update('/home/kiosk/PieMarquee2/marquee/system/maintitle.png')
     # time.sleep(2)
 
     # print('Step 5')
     # print('     Update displayed image again')
-    # myapp.emit_image_update('/home/kiosk/keogeo/1943.png')
+    # myapp.emit_image_update('qt_test_static_2.png')
     # time.sleep(2)
-	
-	
-class RetroThread(QObject):
-    output_received = pyqtSignal(str)
-    error_received = pyqtSignal(str)
-
-    def __init__(self, parent=None):
-        super().__init__(parent)
-
-    def run(self):
-        # Run the libretroarch command
-        process = QProcess()
-        process.setProcessChannelMode(QProcess.MergedChannels)
-        process.readyReadStandardOutput.connect(self.handle_output)
-        process.readyReadStandardError.connect(self.handle_error)
-        process.start("sudo", ["./home/kiosk/retroarch/retroarch", "-L", "-f", "/home/kiosk/libretro-super/dist/unix/fbneo_libretro.so", "/home/kiosk/keogeo/roms/fbneo/kof98.zip"])
-
-    def handle_output(self):
-        output = QTextStream(self.process)
-        self.output_received.emit(output.readAll())
-
-    def handle_error(self):
-        error = QTextStream(self.process)
-        self.error_received.emit(error.readAll())
 
 class myImageDisplayApp (QObject):
 
@@ -94,7 +79,7 @@ class qtAppWidget (QLabel):
         main_thread_object.signal_update_image.connect(self.updateImage)
 
         self.setupGUI()
-        
+
     def setupGUI(self):
 
         self.app = QApplication.instance()
