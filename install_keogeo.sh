@@ -1,6 +1,6 @@
 #!/bin/bash
 
-remove_snap = 0
+remove_snap = false
 
 cd /home/kiosk
 
@@ -10,7 +10,7 @@ sudo apt install -y openssh-server
 #sudo systemctl status ssh
 sudo ufw allow ssh
 
-if [ $remove_snap -ne 0 ]; then
+if $remove_snap; then
 	echo "--------- start removing snapd"
 
 	set -e
